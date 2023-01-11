@@ -26,5 +26,9 @@ const lightBulbMachine = createMachine({
 })
 
 const service = interpret(lightBulbMachine).start()
+service.onTransition(state => {
+  if (state.changed && state.matches("lit"))
+    console.log(state.value)
+})
 service.send("TOGGLE")
 console.log("Service: ", service)
