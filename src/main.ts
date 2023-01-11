@@ -1,4 +1,4 @@
-import { createMachine } from "xstate"
+import { createMachine, interpret } from "xstate"
 
 const lightBulbMachine = createMachine({
   id: "lightBulb",
@@ -25,4 +25,6 @@ const lightBulbMachine = createMachine({
   strict: true
 })
 
-console.log("Machine: ", lightBulbMachine)
+const service = interpret(lightBulbMachine).start()
+service.send("TOGGLE")
+console.log("Service: ", service)
