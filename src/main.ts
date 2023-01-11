@@ -1,21 +1,28 @@
+const STATES = {
+  LIT: "lit",
+  UNLIT: "unlit",
+  BROKEN: "broken"
+}
+
 function lightBulb() {
-  let isLit = false
-  let isBroken = false
+  let state = STATES.UNLIT
 
   return {
     state() {
-      return { isLit, isBroken }
+      return state
     },
     toggle() {
-      if (isBroken) {
-        isLit = false
-        return
+      switch (state) {
+        case STATES.LIT:
+          state = STATES.UNLIT
+          break;
+        case STATES.UNLIT:
+          state = STATES.LIT
+          break;
       }
-      isLit = !isLit
     },
     break() {
-      isBroken = true
-      isLit = false
+      state = STATES.BROKEN
     }
   }
 }
@@ -26,7 +33,17 @@ const log = function () {
 
 const bulb = lightBulb()
 bulb.toggle()
-bulb.break()
 log()
+
+setTimeout(() => {
+  bulb.toggle()
+  log()
+  bulb.break()
+}, 5000)
+
+setTimeout(() => {
+  bulb.toggle()
+  log()
+}, 6000)
 
 export {}
