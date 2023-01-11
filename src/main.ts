@@ -1,49 +1,28 @@
-const STATES = {
-  LIT: "lit",
-  UNLIT: "unlit",
-  BROKEN: "broken"
-}
+import { createMachine } from "xstate"
 
-function lightBulb() {
-  let state = STATES.UNLIT
-
-  return {
-    state() {
-      return state
-    },
-    toggle() {
-      switch (state) {
-        case STATES.LIT:
-          state = STATES.UNLIT
-          break;
-        case STATES.UNLIT:
-          state = STATES.LIT
-          break;
+const lightBulbMachine = createMachine({
+  id: "lightBulb",
+  initial: "unlit",
+  states: {
+    lit: {
+      on: {
+        TOGGLE: "unlit",
+        BREAK: "broken"
       }
     },
-    break() {
-      state = STATES.BROKEN
+    unlit: {
+      on: {
+        TOGGLE: "lit",
+        BREAK: "broken"
+      }
+    },
+    broken: {
+      type: "final"
     }
-  }
-}
+  },
 
-const log = function () {
-  console.log("State: ", bulb.state())
-}
+  predictableActionArguments: true,
+  strict: true
+})
 
-const bulb = lightBulb()
-bulb.toggle()
-log()
-
-setTimeout(() => {
-  bulb.toggle()
-  log()
-  bulb.break()
-}, 5000)
-
-setTimeout(() => {
-  bulb.toggle()
-  log()
-}, 6000)
-
-export {}
+console.log("Machine: ", lightBulbMachine)
