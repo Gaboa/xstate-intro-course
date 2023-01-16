@@ -10,7 +10,8 @@ createMachine({
   id: "lightBulb",
   initial: "unlit",
   context: {
-    color: "#FFF"
+    color: "#FFF",
+    electricity: false
   },
   states: {
     lit: {
@@ -26,8 +27,16 @@ createMachine({
     unlit: {
       entry: ["logUnlit"],
       on: {
-        TOGGLE: "lit",
-        BREAK: "broken"
+        TOGGLE: {
+          target: "lit",
+          cond: "isElectricityOn" 
+        },
+        BREAK: "broken",
+        TURN_ON_POWER: {
+          actions(context, event, meta) {
+            context.electricity = true
+          },
+        }
       }
     },
     broken: {
@@ -54,6 +63,9 @@ createMachine({
         color: event.color
       }))
     }
+  },
+  guards: {
+    isElectricityOn: context => context.electricity
   }
 })
 
